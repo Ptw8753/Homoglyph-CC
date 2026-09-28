@@ -51,16 +51,21 @@ def get_unicode_map(font):
     return unicode_map
 
 
+# load the font
 font = TTFont("Arial-Unicode.ttf")
 
+# find duplicates
 duplicates = find_duplicate_glyphs(font)
 unicode_map = get_unicode_map(font)
 
+# prune glyph values that don't have at least 2 unicode characters
 for glyphs in duplicates:
     values = []
 
     for glyph_name in glyphs:
-        for cp in unicode_map.get(glyph_name, []):
-            values.append(f"U+{cp:04X} ({chr(cp)})")
+        if glyph_name in unicode_map:
+            for cp in unicode_map[glyph_name]:
+                values.append(f"U+{cp:04X} ({chr(cp)})")
 
-    print(", ".join(sorted(values)))
+    if len(values) > 1:
+        print(", ".join(sorted(values)))
