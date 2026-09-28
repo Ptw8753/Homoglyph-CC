@@ -1,20 +1,18 @@
 # a map from a unicode character to a set of all characters that it is homoglyphic with
 import random
 
-# TODO these are example values for now, I still need to hook up the analysis dicts here
-homoglyphs = {'e': ['1', '2']}
+from Common.homoglyph_file_utils import read_homoglyphs
 
-# a map from a unicode character to the binary that it represents
-char_to_bin = {'e': '0',
-               '1': '1',
-               '2': '0'
-               }
+homoglyphs, char_to_bin = read_homoglyphs("arial.hgy")
 
 def character_is_homoglyph(character):
     return character in homoglyphs
 
 # gets a character, homoglyphic to 'char_in', that encodes 'bit_array'
 def get_encoded_char(char_in, bit_array):
+    if len(bit_array) == 0:
+        return char_in
+
     # convert bits to a binary value
     bin = "".join(str(bit) for bit in bit_array)
 
@@ -35,7 +33,7 @@ def encode():
         line = lines[line_idx]
         for char_idx in range(len(line)):
             if character_is_homoglyph(line[char_idx]):
-                bit_length = len(char_to_bin[line[char_idx]])
+                bit_length = len(char_to_bin[line[char_idx]]) # -2 to cut off the 0b
                 bits_to_encode = bin[0:bit_length]
                 line = line[:char_idx] + get_encoded_char(line[char_idx], bits_to_encode) + line[char_idx+1:]
                 # shave these chars from bin
@@ -43,7 +41,7 @@ def encode():
         # overwrite the line with the updated one
         lines[line_idx] = line
 
-    with open("out.txt", "w") as file:
+    with open("out.txt", "w", encoding='utf_8') as file:
         file.writelines(lines)
 
 # Press the green button in the gutter to run the script.

@@ -1,5 +1,6 @@
 import math
 
+from Common.homoglyph_file_utils import write_homoglyphs
 from font_investigation import get_duplicate_glyphs
 
 # Let's say there are n identical characters. That means that we can use that glyph to represent x bits for the largest x such that 2^x < n.
@@ -29,14 +30,7 @@ def populate_lookups(glyphs):
             # assign the ith character in the homoglyphs list to a binary value
             char_to_bin[homoglyph_list[i]] = bin(mod_val)
 
-
+#TODO use frequency analysis to estimate bits per character for the given font
 
 out = get_duplicate_glyphs("Fonts/Arial-Unicode.ttf")
-populate_lookups(out)
-print(out)
-print_values = []
-
-
-# for a maximal encoding, we need to do the following:
-# Create a list of char to binary that it represents
-# Create a list of char to all of its homoglyphs
+write_homoglyphs(out, "arial.hgy")
