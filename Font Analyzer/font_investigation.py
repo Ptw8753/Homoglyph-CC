@@ -2,7 +2,6 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.recordingPen import RecordingPen
 import hashlib
 
-
 # Record the glyph being drawn, then return the hash of the steps
 def glyph_hash(font, glyph_name):
     glyph_set = font.getGlyphSet()
@@ -16,10 +15,10 @@ def glyph_hash(font, glyph_name):
     ).hexdigest()
 
 # returns a list of lists [duplicates]
-def find_duplicate_glyphs(font):
+def find_duplicate_glyphs(font, unicode_map):
     hashes = {}
 
-    for glyph_name in font.getGlyphOrder():
+    for glyph_name in font.getGlyphOrder() and unicode_map:
         # get the hash of the glyph
         h = glyph_hash(font, glyph_name)
         # add it to the list of all hashes
@@ -33,10 +32,8 @@ def find_duplicate_glyphs(font):
     ]
 
 
+# get a map of all glyph names to their unicode values
 def get_unicode_map(font):
-    """
-    Map glyph name -> list of Unicode code points.
-    """
     unicode_map = {}
 
     for table in font["cmap"].tables:
@@ -50,22 +47,37 @@ def get_unicode_map(font):
 
     return unicode_map
 
+# returns a list of lists of unicode values
+# this is a sorted list for all characters that render identically
+def get_duplicate_glyphs(font_filepath):
+    # load the font
+    font = TTFont(font_filepath)
 
-# load the font
-font = TTFont("Arial-Unicode.ttf")
+    unicode_map = get_unicode_map(font)
 
-# find duplicates
-duplicates = find_duplicate_glyphs(font)
-unicode_map = get_unicode_map(font)
+    # find duplicates
+    duplicates = find_duplicate_glyphs(font, unicode_map)
 
-# prune glyph values that don't have at least 2 unicode characters
-for glyphs in duplicates:
-    values = []
+    # # Print all duplicate glyphs
+    # for glyphs in duplicates:
+    #     values = []
+    #
+    #     for glyph_name in glyphs:
+    #         for cp in unicode_map[glyph_name]:
+    #             values.append(f"U+{cp:04X} ({chr(cp)})")
+    #
+    #     if len(values) > 1:
+    #         print(", ".join(sorted(values)))
 
-    for glyph_name in glyphs:
-        if glyph_name in unicode_map:
+    ret_values = []
+    for glyphs in duplicates:
+        values = []
+
+        for glyph_name in glyphs:
             for cp in unicode_map[glyph_name]:
-                values.append(f"U+{cp:04X} ({chr(cp)})")
+                values.append(chr(cp))
 
-    if len(values) > 1:
-        print(", ".join(sorted(values)))
+        if len(values) > 1:
+            ret_values.append(values)
+
+    return ret_values
