@@ -1,2 +1,2 @@
 # Homoglyph-CC
-All Code, Research, and documents associated with the Homoglyph Covert Channel
+All Code and programmatic Research associated with the Homoglyph Covert Channel
