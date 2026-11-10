@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from Common.homoglyph_file_utils import read_homoglyphs
-from decode import decode
+from Src.Common.homoglyph_file_utils import read_homoglyphs
+from Src.decode import decode
 
 
 PROJECT_DIR = Path(__file__).resolve().parent

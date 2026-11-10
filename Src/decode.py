@@ -1,10 +1,10 @@
 from Common.homoglyph_file_utils import read_homoglyphs
 
-homoglyphs, char_to_bin = read_homoglyphs("arial.hgy")
+homoglyphs, char_to_bin = read_homoglyphs("../Fonts/hgy/comic-sans.hgy")
 
 
 def decode():
-    with open("out.txt", "r", encoding="utf-8") as file:
+    with open("../out.txt", "r", encoding="utf-8") as file:
         lines = file.readlines()
 
     bits = ""

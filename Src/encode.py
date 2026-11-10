@@ -3,7 +3,7 @@ import random
 
 from Common.homoglyph_file_utils import read_homoglyphs
 
-homoglyphs, char_to_bin = read_homoglyphs("arial.hgy")
+homoglyphs, char_to_bin = read_homoglyphs("Fonts/hgy/comic-sans.hgy")
 
 def character_is_homoglyph(character):
     return character in homoglyphs
@@ -21,7 +21,7 @@ def get_encoded_char(char_in, bit_array):
     return random.choice([char for char in homoglyph_chars if char_to_bin[char] == bin])
 
 def encode():
-    message = 'Secret message'
+    message = 'Secret Message!!! :)'
     bin = list("".join(format(ord(c), "07b") for c in message))
 
     lines = []

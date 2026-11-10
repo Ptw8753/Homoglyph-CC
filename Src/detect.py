@@ -12,7 +12,7 @@ from Common.homoglyph_file_utils import read_homoglyphs
 
 
 # Read existing homoglyph mappings
-homoglyphs, char_to_bin = read_homoglyphs("arial.hgy")
+homoglyphs, char_to_bin = read_homoglyphs("../Fonts/hgy/arial.hgy")
 
 
 def extract_bits(text):

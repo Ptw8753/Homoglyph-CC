@@ -2,6 +2,7 @@ import math
 from encodings import utf_8
 
 
+# write a homoglyph list to the specified filepath
 def write_homoglyphs(homoglyphs: list[list[str]], filepath_out: str):
     with open(filepath_out, "w", encoding='utf_8') as f:
         lines = []
@@ -13,6 +14,8 @@ def write_homoglyphs(homoglyphs: list[list[str]], filepath_out: str):
             lines.append(glyphs + "\n")
         f.writelines(lines)
 
+# read a .hgy file into a list of homoglyphs
+# returns homoglyphs (the input to write) and char_to_bin (the associated binary value for each char)
 def read_homoglyphs(filepath_in: str):
     homoglyphs = dict()
     char_to_bin = dict()
@@ -30,6 +33,9 @@ def read_homoglyphs(filepath_in: str):
                 for o_g in group:
                     if o_g != g:
                         homoglyphs[g].append(o_g)
+
+            # Let's say there are n identical characters. That means that we can use that glyph to represent x bits for the largest x such that 2^x < n.
+            # Any extra characters can wrap around to emit repeated binary values. todo We can randomly use those as to throw off any frequency analysis
 
             # wrap characters and assign binary values
             max_binary_value = 2 ** math.floor(math.log2(len(group)))
