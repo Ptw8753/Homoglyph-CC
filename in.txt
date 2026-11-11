@@ -1,1 +1,0 @@
-For one of my classes I'm designing a covert channel (basically just hiding messages in plain sight), this message hides the secret message "Frutiger Aero Yams" by exploiting duplicate characters. So like for example, the russian "a" and the english "a" look identical.

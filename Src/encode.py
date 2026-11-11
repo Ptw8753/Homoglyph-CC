@@ -3,13 +3,8 @@ import random
 
 from Common.homoglyph_file_utils import read_homoglyphs
 
-homoglyphs, char_to_bin = read_homoglyphs("Fonts/hgy/comic-sans.hgy")
-
-def character_is_homoglyph(character):
-    return character in homoglyphs
-
 # gets a character, homoglyphic to 'char_in', that encodes 'bit_array'
-def get_encoded_char(char_in, bit_array):
+def get_encoded_char(char_in, bit_array, homoglyphs, char_to_bin):
     if len(bit_array) == 0:
         return char_in
 
@@ -20,33 +15,21 @@ def get_encoded_char(char_in, bit_array):
     # get all chars that encode bits
     return random.choice([char for char in homoglyph_chars if char_to_bin[char] == bin])
 
-def encode():
-    message = 'Secret Message!!! :)'
+def encode(filepath_in: str, filepath_out: str, font_hgy: str, message: str):
+    # preprocess the font
+    homoglyphs, char_to_bin = read_homoglyphs(font_hgy)
+
     bin = list("".join(format(ord(c), "07b") for c in message))
 
-    lines = []
+    encoded_text = ""
 
-    with open("in.txt", "r") as file:
-       lines = file.readlines()
-
-    for line_idx in range(len(lines)):
-        line = lines[line_idx]
-        for char_idx in range(len(line)):
-            if character_is_homoglyph(line[char_idx]):
-                bit_length = len(char_to_bin[line[char_idx]]) # -2 to cut off the 0b
+    with open(filepath_in, "r") as file:
+        while char := file.read(1):
+            if char in homoglyphs:  # if the given char has a homoglyph
+                bit_length = len(char_to_bin[char])  # -2 to cut off the 0b
                 bits_to_encode = bin[0:bit_length]
-                line = line[:char_idx] + get_encoded_char(line[char_idx], bits_to_encode) + line[char_idx+1:]
-                # shave these chars from bin
-                bin = bin[bit_length:]
-        # overwrite the line with the updated one
-        lines[line_idx] = line
+                encoded_text += get_encoded_char(char, bits_to_encode, homoglyphs, char_to_bin)
+                bin = bin[bit_length:] # shave these chars from bin
 
-    with open("out.txt", "w", encoding='utf_8') as file:
-        file.writelines(lines)
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    encode()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-
+    with open(filepath_out, "w", encoding='utf_8') as file:
+        file.write(encoded_text)

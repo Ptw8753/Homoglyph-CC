@@ -1,3 +1,22 @@
+import math
+
+from Common.homoglyph_file_utils import read_homoglyphs
+
+
+# takes the current list of homoglyphs as well as a .frq frequency file to determine a bitrate (bits-per-char) of the font
+# returns the bits per char
+def font_frequency_analysis(hgy_filepath: str, frq_filepath: str):
+    homoglyphs, _ = read_homoglyphs(hgy_filepath)
+
+    bits_per_char = 0
+
+    char_total, frequencies = read_frequency_from_frq(frq_filepath)
+    # for each char, add it's frequency times the # bits it can encode
+    for char in frequencies:
+        if char in homoglyphs:
+            bits_per_char += (frequencies[char] / char_total) * math.floor(math.log2(len(homoglyphs[char])+1))
+
+    return bits_per_char
 
 def write_frequency_to_frq(char_total: int, frequencies: dict[str, int], filepath: str) -> None:
     lines = [str(char_total) + "\n"]
@@ -28,6 +47,7 @@ def read_frequency_from_plaintext(filepath: str) -> tuple[int, dict[str, int]]:
     return char_total, char_frequencies
 
 def read_frequency_from_frq(filepath: str) -> tuple[int, dict[str, int]]:
+
     char_frequencies = {}
 
     with open(filepath, "r", encoding='utf_8') as file:
@@ -46,12 +66,3 @@ def analyze_frequency(char_total: int, frequencies: dict[str, int]):
     for item in arr:
         print(f"{item[0]}: {item[1] * 100} %")
 
-# reads a given text file in and returns a .frq file with frequency stats for frequency
-def count_frequency(filepath_in: str, filepath_out: str):
-    char_total, frequencies = read_frequency_from_plaintext(filepath_in)
-    analyze_frequency(char_total, frequencies)
-    write_frequency_to_frq(char_total, frequencies, filepath_out)
-
-#char_total, frequencies = read_frequency_from_frq("../../Frequency Analysis/tale_of_two_cities.frq")
-#analyze_frequency(char_total, frequencies)
-#count_frequency("../Frequency Analysis/tale_of_two_cities.txt", "../Frequency Analysis/tale_of_two_cities.frq")
