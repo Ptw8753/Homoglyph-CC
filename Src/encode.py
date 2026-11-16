@@ -2,6 +2,8 @@
 import random
 
 from Common.homoglyph_file_utils import read_homoglyphs
+from Common.regex_preprocesser import get_protected_indices
+
 
 # gets a character, homoglyphic to 'char_in', that encodes 'bit_array'
 def get_encoded_char(char_in, bit_array, homoglyphs, char_to_bin):
@@ -19,17 +21,27 @@ def encode(filepath_in: str, filepath_out: str, font_hgy: str, message: str):
     # preprocess the font
     homoglyphs, char_to_bin = read_homoglyphs(font_hgy)
 
-    bin = list("".join(format(ord(c), "07b") for c in message))
+    # first thing to do, preprocess out protected indices
+    protected_indices = get_protected_indices(filepath_in, [" "] + homoglyphs[" "])
+
+    bin = list("".join(format(ord(c), "07b") for c in message)) + ['0' for _ in range(7)]
 
     encoded_text = ""
 
     with open(filepath_in, "r") as file:
+        index = 0
         while char := file.read(1):
-            if char in homoglyphs:  # if the given char has a homoglyph
+            if char in homoglyphs and index not in protected_indices:  # if the given char has a homoglyph and is NOT part of a protected substring
                 bit_length = len(char_to_bin[char])  # -2 to cut off the 0b
                 bits_to_encode = bin[0:bit_length]
                 encoded_text += get_encoded_char(char, bits_to_encode, homoglyphs, char_to_bin)
                 bin = bin[bit_length:] # shave these chars from bin
+            else:
+                encoded_text += char
+            index += 1
 
-    with open(filepath_out, "w", encoding='utf_8') as file:
-        file.write(encoded_text)
+        if len(bin) > 0:
+            print("Could not encode the given message: message is too long!")
+        else:
+            with open(filepath_out, "w", encoding='utf_8') as file:
+                file.write(encoded_text)
