@@ -1,5 +1,14 @@
-# this serves as a single spot for running stuff, just to make stuff a little easier
-# comment out or change lines that you don't want to test
+import sys
+from pathlib import Path
+
+# Insert both the repo root and Src/ onto sys.path so this script can be
+# launched from any working directory, and so the internal imports that
+# use "from Common.X" and "from Src.X" both resolve correctly.
+_PROJECT_DIR = Path(__file__).resolve().parent.parent
+_SRC_DIR = _PROJECT_DIR / "Src"
+for _p in (str(_PROJECT_DIR), str(_SRC_DIR)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from Common.homoglyph_file_utils import write_homoglyphs
 from Src.duplicate_glyph_finder import get_duplicate_glyphs
@@ -7,9 +16,12 @@ from Src.frequency_analyisis import font_frequency_analysis, write_frequency_to_
 from Src.encode import encode
 from Src.decode import decode
 
+# this serves as a single spot for running stuff, just to make stuff a little easier
+# comment out or change lines that you don't want :)
+
 ### IDENTICAL GLYPH DETECTION
-font_ttf = "Fonts/ttf/Arial-Unicode.ttf"
-font_hgy = "Fonts/hgy/arial.hgy"
+font_ttf = str(_PROJECT_DIR / "Fonts" / "ttf" / "Arial-Unicode.ttf")
+font_hgy = str(_PROJECT_DIR / "Fonts" / "hgy" / "arial.hgy")
 
 print(f"1. Analyzing font at {font_hgy}")
 
@@ -20,8 +32,8 @@ homoglyphs = get_duplicate_glyphs(font_ttf)
 write_homoglyphs(homoglyphs, font_hgy)
 
 ### FREQUENCY ANALYSIS
-frequency_analysis_txt = "Frequency Analysis/plaintext/tale_of_two_cities.txt"
-frequency_analysis_frq = "Frequency Analysis/frq/tale_of_two_cities.frq"
+frequency_analysis_txt = str(_PROJECT_DIR / "Frequency Analysis" / "tale_of_two_cities.txt")
+frequency_analysis_frq = str(_PROJECT_DIR / "Frequency Analysis" / "tale_of_two_cities.frq")
 
 print("2. Performing frequency analysis on the font")
 
@@ -34,8 +46,8 @@ bits_per_char = font_frequency_analysis(font_hgy, frequency_analysis_frq)
 print(f"\tThe analyzed font can encode at {bits_per_char} bits per char")
 
 ### ENCODE / DECODE
-plaintext_txt = "plaintext.txt"
-modified_txt = "modified.txt"
+plaintext_txt = str(_PROJECT_DIR / "plaintext.txt")
+modified_txt  = str(_PROJECT_DIR / "modified.txt")
 secret_message = "This is my secret message!"
 
 print(f"3. Encoding \"{secret_message}\" within the text at {plaintext_txt} and writing the result to {modified_txt}")
