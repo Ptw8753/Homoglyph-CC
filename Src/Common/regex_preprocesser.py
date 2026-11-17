@@ -1,3 +1,5 @@
+# Regex preprocessing for encoding and decoding. Scans for protected indices to maintain links and email addresses
+
 import re
 
 # returns a set of indices that should be excluded from the final message's encoding and decoding

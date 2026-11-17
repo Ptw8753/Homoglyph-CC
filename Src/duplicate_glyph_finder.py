@@ -1,3 +1,5 @@
+# Tool to analyze a ttf file for identical glyphs (homoglyphs)
+
 from fontTools.ttLib import TTFont
 from fontTools.pens.recordingPen import DecomposingRecordingPen
 import hashlib

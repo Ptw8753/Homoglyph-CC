@@ -1,4 +1,5 @@
-# a map from a unicode character to a set of all characters that it is homoglyphic with
+# Encode for a secret message given a font .hgy file and a plaintext file
+
 import random
 
 from Common.homoglyph_file_utils import read_homoglyphs

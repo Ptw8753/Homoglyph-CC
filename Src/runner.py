@@ -1,11 +1,11 @@
+# this serves as a single spot for running stuff, just to make stuff a little easier
+# comment out or change lines that you don't want to test
+
 from Common.homoglyph_file_utils import write_homoglyphs
 from Src.duplicate_glyph_finder import get_duplicate_glyphs
 from Src.frequency_analyisis import font_frequency_analysis, write_frequency_to_frq, read_frequency_from_plaintext
 from Src.encode import encode
 from Src.decode import decode
-
-# this serves as a single spot for running stuff, just to make stuff a little easier
-# comment out or change lines that you don't want :)
 
 ### IDENTICAL GLYPH DETECTION
 font_ttf = "Fonts/ttf/Arial-Unicode.ttf"
@@ -20,8 +20,8 @@ homoglyphs = get_duplicate_glyphs(font_ttf)
 write_homoglyphs(homoglyphs, font_hgy)
 
 ### FREQUENCY ANALYSIS
-frequency_analysis_txt = "Frequency Analysis/tale_of_two_cities.txt"
-frequency_analysis_frq = "Frequency Analysis/tale_of_two_cities.frq"
+frequency_analysis_txt = "Frequency Analysis/plaintext/tale_of_two_cities.txt"
+frequency_analysis_frq = "Frequency Analysis/frq/tale_of_two_cities.frq"
 
 print("2. Performing frequency analysis on the font")
 

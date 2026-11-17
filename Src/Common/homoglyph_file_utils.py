@@ -1,6 +1,7 @@
-import math
-from encodings import utf_8
+# Utils for reading and writing .hgy files
+# Common to encode and decode
 
+import math
 
 # write a homoglyph list to the specified filepath
 def write_homoglyphs(homoglyphs: list[list[str]], filepath_out: str):

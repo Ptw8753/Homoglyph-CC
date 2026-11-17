@@ -1,3 +1,6 @@
+# Performs frequency analysis on a given plaintext
+# This is used to calculate bits per char for a given font
+
 import math
 
 from Common.homoglyph_file_utils import read_homoglyphs

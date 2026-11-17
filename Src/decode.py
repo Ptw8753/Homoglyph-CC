@@ -1,3 +1,5 @@
+# Decode for a secret message given a font .hgy file and an encoded text file
+
 from Common.homoglyph_file_utils import read_homoglyphs
 from Common.regex_preprocesser import get_protected_indices
 
